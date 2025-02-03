@@ -1,1 +1,18 @@
-<!DOCTYPE html><html lang="id"><head>    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>Login/Register</title></head><body>    <h2>Login/Register</h2>    <p id="message"></p>    <form id="login-form">        <label for="username">Username:</label>        <input type="text" id="username" name="username" value="" required><br><br>        <label for="captcha">Captcha (Hanya untuk Registrasi):</label>        <input type="text" id="captcha" name="captcha" placeholder="captcha hanya admin yang tau!"><br><br>        <input type="submit" value="Submit">    </form>    <script>        document.getElementById("login-form").addEventListener("submit", function(event) {            event.preventDefault();            const username = document.getElementById("username").value;            const captcha = document.getElementById("captcha").value;            fetch('/login', {                method: 'POST',                headers: {                    'Content-Type': 'application/json'                },                body: JSON.stringify({ username: username, captcha: captcha })            })            .then(response => response.json())            .then(data => {                document.getElementById("message").innerHTML = data.message;            })            .catch(error => {                document.getElementById("message").innerHTML = "Terjadi kesalahan. Coba lagi.";            });        });    </script></body></html>
+const mysql = require("mysql");
+
+const connection = mysql.createConnection({
+    host: process.env.DB_HOST || "sql309.ezyro.com",
+    user: process.env.DB_USER || "ezyro_37516611",
+    password: process.env.DB_PASS || "ppsm1919",
+    database: process.env.DB_NAME || "ezyro_37516611_login"
+});
+
+connection.connect((err) => {
+    if (err) {
+        console.error("Koneksi Database Gagal:", err);
+        return;
+    }
+    console.log("Terhubung ke Database!");
+});
+
+module.exports = connection;
